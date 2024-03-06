@@ -18,50 +18,61 @@ function CalculateSavings(){
       handleResult()})
 
     const handleInitChange = (event) => {
-      setInit(parseFloat(event.target.value)  )
+      setInit(parseFloat(event.target.value) || 0 )
       handleResult()
     }
     
     const handleRegularChange = (event) => {
-      setRegular(parseFloat(event.target.value))
+      setRegular(parseFloat(event.target.value)|| 0 )
       handleResult()
       
     }
 
     const handleFrequencyChange = (event) => {
-      setFrequency(parseFloat(event.target.value))
+      setFrequency(event.target.value)
       handleResult()
     }
 
     const handleYearsChange = (event) => {
-      setYears(parseFloat(event.target.value))
+      setYears(parseFloat(event.target.value)|| 0 )
       handleResult()
     }
 
     const handleRateChange = (event) => {
-      setRate(parseFloat(event.target.value))
+      setRate(parseFloat(event.target.value)|| 0 )
       handleResult()
     }
 
     const handleResult = () => {
 
-      let result = init;
-      let interest = 0;
-      for (let i = 0; i < (years*12); i++) {
-        interest = result*(rate/100)/12
-        result += interest;
-      }
+   
+
+        let P = init
+        let r = rate/100
+        let n = 12
+        let t = years
+
+        let t2 = frequency
+
+
+        let C = 0
+        
+        let A = P*(1+(r/n))**(n*t)
+
+        
+        if (regular != 0){
+          C = (regular/(r/t2))*   ((1+(r/t2))**(t2)-1)
+        }
       
      
       
-     
-      setResult(result)
+        let result = A+C
+      setResult(Math.round(result*100)/100)
   
     }
 
 
   
-   
     return (
     <>
     <p>Initial deposit:</p>
@@ -72,8 +83,13 @@ function CalculateSavings(){
      
 
       <p>Deposit frequency:</p>
-      <input value = {frequency} onChange = {handleFrequencyChange}></input>
-
+      <select value = {frequency} onChange = {handleFrequencyChange}>
+        <option value={0}>Select an option</option>
+        <option value={52  }>Week</option>
+        <option value={26}>Fortnight</option>
+        <option value={12}>Month</option>
+        <option value={1}>Year</option>
+      </select>
      
       <p>Number of years:</p>
       <input value = {years} onChange = {handleYearsChange}></input>
@@ -88,7 +104,7 @@ function CalculateSavings(){
       <br></br>
 
       <p>Result : {result}</p>
-      <button>Calculate Savings</button>
+  
 
       </>
     )
