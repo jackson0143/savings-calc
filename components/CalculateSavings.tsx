@@ -17,12 +17,12 @@ function CalculateSavings(){
     useEffect(() => {
       handleResult()})
 
-    const handleInitChange = (event) => {
+    const handleInitChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setInit(parseFloat(event.target.value) || 0 )
       handleResult()
     }
     
-    const handleRegularChange = (event) => {
+    const handleRegularChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setRegular(parseFloat(event.target.value)|| 0 )
       handleResult()
       
@@ -33,31 +33,28 @@ function CalculateSavings(){
       handleResult()
     }
 
-    const handleYearsChange = (event) => {
+    const handleYearsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setYears(parseFloat(event.target.value)|| 0 )
       handleResult()
     }
 
-    const handleRateChange = (event) => {
+    const handleRateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setRate(parseFloat(event.target.value)|| 0 )
       handleResult()
     }
 
     const handleResult = () => {
 
-   
+        const P = init
+        const r = rate/100
+        const n = 12
+        const t = years
 
-        let P = init
-        let r = rate/100
-        let n = 12
-        let t = years
-
-        let t2 = frequency
+        const t2 = frequency
 
 
         let C = 0
-        
-        let A = P*(1+(r/n))**(n*t)
+        const A = P*(1+(r/n))**(n*t)
 
         
         if (regular != 0){
@@ -66,7 +63,7 @@ function CalculateSavings(){
       
      
       
-        let result = A+C
+        const result = A+C
       setResult(Math.round(result*100)/100)
   
     }
@@ -74,7 +71,8 @@ function CalculateSavings(){
 
   
     return (
-    <>
+      <>
+    <div>
     <p>Initial deposit:</p>
       <input value = {init} onChange = {handleInitChange}></input>
 
@@ -103,8 +101,10 @@ function CalculateSavings(){
       
       <br></br>
 
-      <p>Result : {result}</p>
+      <p className = "result">Result : {result}</p>
   
+
+      </div>
 
       </>
     )
