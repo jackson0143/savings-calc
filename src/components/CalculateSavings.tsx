@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Graph from "./graph";
+
 function CalculateSavings() {
   const [init, setInit] = useState(0);
   const [regular, setRegular] = useState(0);
@@ -8,59 +9,97 @@ function CalculateSavings() {
   const [rate, setRate] = useState(0);
   const [result, setResult] = useState(0);
 
+  const [graphData, setGraphData] = useState([]);
+
+
+
   /* renders */
   useEffect(() => {
+
+
+    const handleResult = () => {
+      const P = init;
+      const r = rate / 100;
+      const n = 12;
+      const t = years;
+
+      const t2 = frequency;
+
+      let C = 0;
+      const graphingData = []
+      const arr: number[] = [];
+
+      //let OGValue = P
+      const arrOG: number[] = [];
+
+
+      for (let i = 0; i <= t * 12; i++) {
+
+        const A = P * (1 + r / n) ** (n * (t * i / 12))
+        const temp = (1 + r / t2) ** t2 - 1;
+
+        if (regular != 0) {
+          if (temp != 0) {
+            C = (regular / (r / t2)) * ((1 + r / t2) ** t2 - 1);
+            // OGValue += regular
+          } else {
+            C = regular * t2;
+          }
+        }
+
+
+        arr.push(A + C)
+
+
+        //arrOG.push(OGValue)
+        graphingData.push({
+          name: `${i + 1}`,
+          //original:Math.round(arrOG[arr.length-1]*100)/100,
+          amount: Math.round(arr[arr.length - 1] * 100) / 100
+        })
+
+
+      }
+      console.log(arrOG)
+
+      const result = arr[arr.length - 1];
+
+
+      setResult(Math.round(result * 100) / 100);
+      setGraphData(graphingData)
+
+
+    };
     handleResult();
-  });
+  }, [frequency, init, rate, years, regular]);
 
   const handleInitChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInit(parseFloat(event.target.value) || 0);
-    handleResult();
+    //handleResult();
   };
 
   const handleRegularChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRegular(parseFloat(event.target.value) || 0);
-    handleResult();
+    //handleResult();
   };
 
   const handleFrequencyChange = (event) => {
     setFrequency(event.target.value);
-    handleResult();
+    //handleResult();
   };
 
   const handleYearsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setYears(parseFloat(event.target.value) || 0);
-    handleResult();
+    //handleResult();
   };
 
   const handleRateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRate(parseFloat(event.target.value) || 0);
-    handleResult();
+    //handleResult();
   };
 
-  const handleResult = () => {
-    const P = init;
-    const r = rate / 100;
-    const n = 12;
-    const t = years;
 
-    const t2 = frequency;
 
-    let C = 0;
-    const A = P * (1 + r / n) ** (n * t);
-
-    let temp = (1 + r / t2) ** t2 - 1;
-    if (regular != 0) {
-      if (temp != 0) {
-        C = (regular / (r / t2)) * ((1 + r / t2) ** t2 - 1);
-      } else {
-        C = regular * t2;
-      }
-    }
-
-    const result = A + C;
-    setResult(Math.round(result * 100) / 100);
-  };
 
   return (
     <>
@@ -79,7 +118,7 @@ function CalculateSavings() {
             </div>
 
             <div className="row mb-5">
-              <label className="col-4 col-form-label">Initial deposit</label>
+              <label className="col-4 col-form-label">Regular deposit</label>
               <div className="col-sm-6">
                 <input
                   value={regular}
@@ -131,7 +170,7 @@ function CalculateSavings() {
           </div>
 
           <div className="col-12 col-sm-8">
-            <Graph />
+            <Graph data={graphData} />
           </div>
         </div>
       </div>
